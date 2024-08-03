@@ -10,6 +10,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,8 +44,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.personalwallet.enums.TransactionTypeEnum
 import com.example.personalwallet.model.vo.TransactionVO
+import com.example.personalwallet.navigation.TopLevelDestination
+import com.example.personalwallet.navigation.WalletNavHost
+import com.example.personalwallet.navigation.navigateSingleToTop
+import com.example.personalwallet.ui.component.BottomTabRow
+import com.example.personalwallet.ui.screen.DashboardScreen
 import com.example.personalwallet.ui.theme.PersonalWalletTheme
 import com.example.personalwallet.utils.DateUtils
 import timber.log.Timber
@@ -56,13 +65,56 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PersonalWalletTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                PersonalWalletApp()
+            }
+        }
+    }
+}
+
+val walletTabRowScreens = listOf(
+    TopLevelDestination.DASHBOARD,
+    TopLevelDestination.WALLET,
+    TopLevelDestination.SETTINGS
+)
+
+@Composable
+fun PersonalWalletApp() {
+    val navController = rememberNavController()
+
+    val currentBackstack  by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackstack?.destination
+    val currentScreen = walletTabRowScreens.find {
+        it.route == currentDestination?.route
+    } ?: TopLevelDestination.DASHBOARD
+
+    PersonalWalletTheme {
+        Scaffold(
+            topBar = {
+                Row {
+                    Text(
+                        text = "Personal Wallet",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight(700),
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            },
+            bottomBar = {
+                if (currentScreen != TopLevelDestination.SETTINGS) {
+                    BottomTabRow(
+                        allScreens = walletTabRowScreens,
+                        onTabSelected = { newScreen ->
+                            navController.navigateSingleToTop(newScreen.route)
+                        },
+                        currentScreen = currentScreen
                     )
                 }
             }
+        ) { innerPadding ->
+            WalletNavHost(
+                navHostController = navController,
+                modifier = Modifier.padding(innerPadding)
+            )
         }
     }
 }
@@ -92,7 +144,7 @@ fun FinancialSummary(
     modifier: Modifier = Modifier
 ) {
     val rmbStr = stringResource(id = R.string.cny)
-    Column (
+    Column(
         modifier = modifier
             .background(Color(0xFF2E7E79), shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
@@ -100,12 +152,14 @@ fun FinancialSummary(
         Text(
             text = "Total balance",
             fontSize = 16.sp,
-            color = Color.White)
+            color = Color.White
+        )
         Text(
             text = "$rmbStr $totalBalance",
             fontSize = 24.sp,
             fontWeight = FontWeight(700),
-            color = Color.White)
+            color = Color.White
+        )
         Spacer(modifier = Modifier.height(10.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -116,13 +170,23 @@ fun FinancialSummary(
             ) {
                 Text(text = "Income", fontSize = 14.sp, color = Color.White)
 
-                Text(text = "$rmbStr $income", fontSize = 20.sp, fontWeight = FontWeight(700), color = Color.White)
+                Text(
+                    text = "$rmbStr $income",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight(700),
+                    color = Color.White
+                )
             }
             Column(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(text = "Expenses", fontSize = 14.sp, color = Color.White)
-                Text(text = "$rmbStr $income", fontSize = 20.sp,fontWeight = FontWeight(700), color = Color.White)
+                Text(
+                    text = "$rmbStr $income",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight(700),
+                    color = Color.White
+                )
             }
         }
     }
@@ -147,7 +211,7 @@ fun TransactionItem(
     secondaryType: String = "Salary",
     serverProvider: String = "Alipay",
     createAt: LocalDateTime = LocalDateTime.now(),
-    modifier: Modifier= Modifier
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
@@ -200,7 +264,13 @@ fun TransactionItem(
         } else {
             "+ $amount"
         }
-        Text(text = amountStr, fontSize = 18.sp, fontWeight = FontWeight(700), color = color, modifier = Modifier.padding(0.dp, 0.dp, 8.dp, 0.dp))
+        Text(
+            text = amountStr,
+            fontSize = 18.sp,
+            fontWeight = FontWeight(700),
+            color = color,
+            modifier = Modifier.padding(0.dp, 0.dp, 8.dp, 0.dp)
+        )
     }
 }
 
@@ -275,36 +345,39 @@ fun InputFieldWithEndIcon(
     focus: Boolean = false,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier
             .height(60.dp)
             .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = Modifier
-                .fillMaxHeight()
-                .background(color = Color.White)
-                .weight(1f),
-            maxLines = 1,
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
+            .padding(8.dp, 0.dp, 8.dp, 0.dp),
+        trailingIcon = {
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "Input Icon",
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable {
+                        onValueChange("")
+                    }
             )
+        },
+
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
         )
-        Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "Input Icon")
-    }
+    )
+
 }
 
 @Preview
 @Composable
 fun InputFieldWithEndIconPreview() {
     PersonalWalletTheme {
-        InputFieldWithEndIcon( value = "hell", onValueChange = { newValue ->
+        InputFieldWithEndIcon(value = "hell", onValueChange = { newValue ->
             Timber.d("New value: $newValue")
         })
     }

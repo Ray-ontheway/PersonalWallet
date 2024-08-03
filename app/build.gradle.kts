@@ -75,4 +75,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.timber)
+    implementation(libs.navigation.compose)
+    implementation(libs.androidx.metrics)
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation ("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 }

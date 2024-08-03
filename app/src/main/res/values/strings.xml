@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">PersonalWallet</string>
     <string name="cny">&#165;</string>
+
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_wallet">Wallet</string>
+    <string name="title_settings">Settings</string>
 </resources>
