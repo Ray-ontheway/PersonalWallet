@@ -12,21 +12,23 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -39,11 +41,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.personalwallet.enums.TransactionTypeEnum
@@ -52,20 +54,40 @@ import com.example.personalwallet.navigation.TopLevelDestination
 import com.example.personalwallet.navigation.WalletNavHost
 import com.example.personalwallet.navigation.navigateSingleToTop
 import com.example.personalwallet.ui.component.BottomTabRow
-import com.example.personalwallet.ui.screen.DashboardScreen
+import com.example.personalwallet.ui.component.WalletTopBar
 import com.example.personalwallet.ui.theme.PersonalWalletTheme
 import com.example.personalwallet.utils.DateUtils
 import timber.log.Timber
 import java.time.LocalDateTime
-import java.util.Date
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = android.graphics.Color.TRANSPARENT
+        window.navigationBarColor = android.graphics.Color.TRANSPARENT
+
         setContent {
             PersonalWalletTheme {
-                PersonalWalletApp()
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.bg),
+                        contentDescription = "Background",
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Transparent)
+                            .systemBarsPadding()
+                    ) {
+                        PersonalWalletApp()
+                    }
+                }
             }
         }
     }
@@ -74,67 +96,55 @@ class MainActivity : ComponentActivity() {
 val walletTabRowScreens = listOf(
     TopLevelDestination.DASHBOARD,
     TopLevelDestination.WALLET,
-    TopLevelDestination.SETTINGS
+    TopLevelDestination.SETTINGS,
 )
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
-fun PersonalWalletApp() {
+fun PersonalWalletApp(
+    modifier: Modifier = Modifier
+) {
     val navController = rememberNavController()
 
-    val currentBackstack  by navController.currentBackStackEntryAsState()
+    val currentBackstack by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackstack?.destination
     val currentScreen = walletTabRowScreens.find {
         it.route == currentDestination?.route
     } ?: TopLevelDestination.DASHBOARD
 
-    PersonalWalletTheme {
-        Scaffold(
-            topBar = {
-                Row {
-                    Text(
-                        text = "Personal Wallet",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight(700),
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-            },
-            bottomBar = {
-                if (currentScreen != TopLevelDestination.SETTINGS) {
-                    BottomTabRow(
-                        allScreens = walletTabRowScreens,
-                        onTabSelected = { newScreen ->
-                            navController.navigateSingleToTop(newScreen.route)
-                        },
-                        currentScreen = currentScreen
-                    )
-                }
+    Scaffold(
+        containerColor = Color.Transparent,
+        contentColor = Color.Transparent,
+        topBar = {
+            if (TopLevelDestination.entries.find { it.route == currentScreen.route } == null) {
+                WalletTopBar(
+                    title = "Personal Wallet",
+                    modifier = Modifier
+                )
             }
+        },
+        bottomBar = {
+            if (currentScreen != TopLevelDestination.SETTINGS) {
+                BottomTabRow(
+                    allScreens = walletTabRowScreens,
+                    onTabSelected = { newScreen ->
+                        navController.navigateSingleToTop(newScreen.route)
+                    },
+                    currentScreen = currentScreen
+                )
+            }
+        },
+
         ) { innerPadding ->
-            WalletNavHost(
-                navHostController = navController,
-                modifier = Modifier.padding(innerPadding)
-            )
-        }
+        WalletNavHost(
+            navHostController = navController,
+            modifier = Modifier
+                .padding(innerPadding)
+                .background(Color.Transparent)
+        )
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PersonalWalletTheme {
-        Greeting("Android")
-    }
-}
-
 
 @Composable
 fun FinancialSummary(
@@ -144,23 +154,24 @@ fun FinancialSummary(
     modifier: Modifier = Modifier
 ) {
     val rmbStr = stringResource(id = R.string.cny)
+
     Column(
         modifier = modifier
-            .background(Color(0xFF2E7E79), shape = RoundedCornerShape(8.dp))
+            .background(Color(0xFF1B5C58), shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
     ) {
         Text(
             text = "Total balance",
-            fontSize = 16.sp,
+            fontSize = 18.sp,
             color = Color.White
         )
         Text(
             text = "$rmbStr $totalBalance",
-            fontSize = 24.sp,
+            fontSize = 32.sp,
             fontWeight = FontWeight(700),
             color = Color.White
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -168,11 +179,11 @@ fun FinancialSummary(
             Column(
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(text = "Income", fontSize = 14.sp, color = Color.White)
+                Text(text = "Income", fontSize = 16.sp, color = Color.White)
 
                 Text(
                     text = "$rmbStr $income",
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight(700),
                     color = Color.White
                 )
@@ -180,16 +191,17 @@ fun FinancialSummary(
             Column(
                 horizontalAlignment = Alignment.End
             ) {
-                Text(text = "Expenses", fontSize = 14.sp, color = Color.White)
+                Text(text = "Expenses", fontSize = 16.sp, color = Color.White)
                 Text(
                     text = "$rmbStr $income",
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight(700),
                     color = Color.White
                 )
             }
         }
     }
+
 }
 
 @Preview
@@ -207,7 +219,6 @@ fun TransactionItem(
     @IdRes resId: Int = R.drawable.ic_launcher_foreground,
     transactionType: TransactionTypeEnum = TransactionTypeEnum.EXPENSE,
     amount: Double = 0.0,
-    primaryType: String = "Income",
     secondaryType: String = "Salary",
     serverProvider: String = "Alipay",
     createAt: LocalDateTime = LocalDateTime.now(),
@@ -298,9 +309,8 @@ fun TransactionList(
                 resId = transaction.resId,
                 transactionType = if (transaction.amount < 0) TransactionTypeEnum.EXPENSE else TransactionTypeEnum.INCOME,
                 amount = transaction.amount,
-                primaryType = "Income",
                 secondaryType = "Salary",
-                serverProvider = transaction.serverProvider ?: "",
+                serverProvider = transaction.serverProvider,
                 createAt = transaction.createAt
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -326,11 +336,11 @@ fun getTransactionList(): List<TransactionVO> {
             TransactionVO(
                 i.toLong(),
                 "uid",
-                1,
+                "1",
                 "Alipay",
                 amount = 100.0,
                 comment = "comment",
-                isImpulse = false
+                isImpulse = false,
             )
         )
     }
@@ -370,7 +380,6 @@ fun InputFieldWithEndIcon(
             unfocusedContainerColor = Color.Transparent,
         )
     )
-
 }
 
 @Preview

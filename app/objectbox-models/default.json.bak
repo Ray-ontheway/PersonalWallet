@@ -1,0 +1,263 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:7333791798486095019",
+      "lastPropertyId": "8:8338984447375307741",
+      "name": "PrimaryType",
+      "properties": [
+        {
+          "id": "1:7433271560463163136",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1445854468530877034",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:3504117403064833883",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:6599787599647452948",
+          "name": "transactionCount",
+          "type": 5
+        },
+        {
+          "id": "5:5619923973250370854",
+          "name": "totalAmount",
+          "type": 8
+        },
+        {
+          "id": "6:5302019771582677549",
+          "name": "createAt",
+          "type": 6
+        },
+        {
+          "id": "7:8315511806975884457",
+          "name": "updateAt",
+          "type": 6
+        },
+        {
+          "id": "8:8338984447375307741",
+          "name": "isDeleted",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:8558464820031375940",
+      "lastPropertyId": "8:5439435135158507506",
+      "name": "SecondaryType",
+      "properties": [
+        {
+          "id": "1:8459944067875030858",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5329185107960768781",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:3038339128915132465",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:2911424609395567986",
+          "name": "transactionCount",
+          "type": 5
+        },
+        {
+          "id": "5:2186807216913424783",
+          "name": "totalAmount",
+          "type": 8
+        },
+        {
+          "id": "6:8994214070181953647",
+          "name": "createAt",
+          "type": 6
+        },
+        {
+          "id": "7:2478218845373157214",
+          "name": "updateAt",
+          "type": 6
+        },
+        {
+          "id": "8:5439435135158507506",
+          "name": "isDeleted",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:8616160684546313498",
+      "lastPropertyId": "11:6945867792108954754",
+      "name": "TransactionRecord",
+      "properties": [
+        {
+          "id": "1:556323610329868240",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5457989578330137076",
+          "name": "uid",
+          "type": 9
+        },
+        {
+          "id": "3:6937894938701191997",
+          "name": "secondaryTypeId",
+          "type": 6
+        },
+        {
+          "id": "4:763675879351009229",
+          "name": "serverProvider",
+          "type": 9
+        },
+        {
+          "id": "5:8671148231843768906",
+          "name": "resId",
+          "type": 5
+        },
+        {
+          "id": "6:1102233682987009050",
+          "name": "amount",
+          "type": 8
+        },
+        {
+          "id": "7:540291269316076617",
+          "name": "comment",
+          "type": 9
+        },
+        {
+          "id": "8:396842525340741796",
+          "name": "createAt",
+          "type": 6
+        },
+        {
+          "id": "9:3662018150299719232",
+          "name": "updateAt",
+          "type": 6
+        },
+        {
+          "id": "10:2795787836227518865",
+          "name": "isImpulse",
+          "type": 1
+        },
+        {
+          "id": "11:6945867792108954754",
+          "name": "isDeleted",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:7750484440867453360",
+      "lastPropertyId": "4:1862046577475214991",
+      "name": "TypeRelation",
+      "properties": [
+        {
+          "id": "1:8656534469131545181",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5456210408487301197",
+          "name": "primaryTypeId",
+          "type": 6
+        },
+        {
+          "id": "3:8629813069431007835",
+          "name": "secondaryTypeId",
+          "type": 6
+        },
+        {
+          "id": "4:1862046577475214991",
+          "name": "isDeleted",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:2823077856390808339",
+      "lastPropertyId": "9:937115228725437702",
+      "name": "Wallet",
+      "properties": [
+        {
+          "id": "1:3286769021970370247",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:510800366846856992",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:7341857287635805976",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:2724052848259956919",
+          "name": "balance",
+          "type": 8
+        },
+        {
+          "id": "5:6401105678843329262",
+          "name": "income",
+          "type": 8
+        },
+        {
+          "id": "6:349307464434452674",
+          "name": "expense",
+          "type": 8
+        },
+        {
+          "id": "7:451840701319992886",
+          "name": "createAt",
+          "type": 6
+        },
+        {
+          "id": "8:4206187756295004856",
+          "name": "updateAt",
+          "type": 6
+        },
+        {
+          "id": "9:937115228725437702",
+          "name": "isDeleted",
+          "type": 1
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "5:2823077856390808339",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

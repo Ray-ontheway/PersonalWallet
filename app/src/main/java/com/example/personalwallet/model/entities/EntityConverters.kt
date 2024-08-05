@@ -7,7 +7,6 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 class LocalDateTimeConverter : PropertyConverter<LocalDateTime, Long> {
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun convertToEntityProperty(databaseValue: Long): LocalDateTime {
         return LocalDateTime.ofEpochSecond(databaseValue, 0, ZoneOffset.UTC)
@@ -17,5 +16,14 @@ class LocalDateTimeConverter : PropertyConverter<LocalDateTime, Long> {
     override fun convertToDatabaseValue(entityProperty: LocalDateTime): Long {
         return entityProperty.toEpochSecond(ZoneOffset.UTC)
     }
+}
 
+class TransactionTypeConverter : PropertyConverter<TransactionTypeEnum, Int> {
+    override fun convertToEntityProperty(databaseValue: Int): TransactionTypeEnum {
+        return TransactionTypeEnum.entries.first { it.value == databaseValue }
+    }
+
+    override fun convertToDatabaseValue(entityProperty: TransactionTypeEnum): Int {
+        return entityProperty.value
+    }
 }

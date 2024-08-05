@@ -79,4 +79,6 @@ dependencies {
     implementation(libs.androidx.metrics)
     implementation("androidx.compose.material:material-icons-extended")
     implementation ("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.31.0-alpha")
+
 }

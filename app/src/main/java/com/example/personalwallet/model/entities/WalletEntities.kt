@@ -7,8 +7,8 @@ import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import java.time.LocalDateTime
 
-@Entity
 @RequiresApi(Build.VERSION_CODES.O)
+@Entity
 data class PrimaryType(
     @Id var id: Long = 0,
     val name: String,
@@ -22,8 +22,8 @@ data class PrimaryType(
     val isDeleted: Boolean = false,
 )
 
-@Entity
 @RequiresApi(Build.VERSION_CODES.O)
+@Entity
 data class SecondaryType (
     @Id var id: Long = 0,
     val name: String,
@@ -45,14 +45,16 @@ data class TypeRelation(
     val isDeleted: Boolean = false,
 )
 
-@Entity
 @RequiresApi(Build.VERSION_CODES.O)
+@Entity
 data class TransactionRecord(
     @Id var id: Long = 0,
     var uid: String,
     val secondaryTypeId: Long,
     val serverProvider: String? = "",
     val resId: Int,
+    @Convert(converter = TransactionTypeConverter::class, dbType = Int::class)
+    val transactionType: TransactionTypeEnum,
     val amount: Double = 0.0,
     val comment: String? = null,
     @Convert(converter = LocalDateTimeConverter::class, dbType = Long::class)
@@ -63,8 +65,8 @@ data class TransactionRecord(
     var isDeleted: Boolean = false,
 )
 
-@Entity
 @RequiresApi(Build.VERSION_CODES.O)
+@Entity
 data class Wallet (
     @Id var id: Long = 0,
     val name: String,
