@@ -1,5 +1,7 @@
 package com.example.personalwallet.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -11,6 +13,7 @@ import com.example.personalwallet.ui.screen.SettingsScreen
 import com.example.personalwallet.ui.screen.WalletScreen
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WalletNavHost(
     navHostController: NavHostController,
@@ -18,18 +21,13 @@ fun WalletNavHost(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = TopLevelDestination.DASHBOARD.route,
+        startDestination = DASHBOARD.route,
         modifier = modifier
     ) {
-        composable(route = TopLevelDestination.DASHBOARD.route) {
-            DashboardScreen()
-        }
-        composable(route = TopLevelDestination.WALLET.route) {
-            WalletScreen()
-        }
-        composable(route = TopLevelDestination.SETTINGS.route) {
-            SettingsScreen()
-        }
+        dashboardScreen(navHostController::gotoNewTransaction)
+        walletScreen()
+        settingsScreen()
+        newTransactionScreen(navHostController::popBackStack)
     }
 }
 

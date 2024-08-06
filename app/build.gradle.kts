@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.navigation.compose)
     implementation(libs.androidx.metrics)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
     implementation("androidx.compose.material:material-icons-extended")
     implementation ("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.31.0-alpha")

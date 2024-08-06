@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.personalwallet.navigation.TopLevelDestination
+import com.example.personalwallet.navigation.WalletDestination
 import com.example.personalwallet.ui.icon.WalletIcons
 
 private val TabHeight = 60.dp
@@ -42,9 +43,9 @@ fun TabItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Image(
+        Icon(
             imageVector = icon,
-            contentDescription = text
+            contentDescription = text,
         )
         Text(text = text, fontSize = 20.sp, color = Color.Black)
     }
@@ -52,9 +53,9 @@ fun TabItem(
 
 @Composable
 fun BottomTabRow(
-    allScreens: List<TopLevelDestination>,
-    onTabSelected: (TopLevelDestination) -> Unit,
-    currentScreen: TopLevelDestination
+    allScreens: List<WalletDestination>,
+    onTabSelected: (WalletDestination) -> Unit,
+    currentScreen: WalletDestination
 ) {
     Row(
         Modifier
@@ -66,7 +67,7 @@ fun BottomTabRow(
         allScreens.forEach { screen ->
             TabItem(
                 text = screen.route,
-                icon = screen.selectedIcon,
+                icon = screen.selectedIcon!!,
                 onSelect = { onTabSelected(screen) },
                 isSelected = currentScreen == screen
             )
@@ -87,7 +88,8 @@ fun WalletTopBar(
         Text(
             text = title,
             modifier = Modifier.weight(1f),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = Color.Black
         )
         Image(imageVector = WalletIcons.OPTION, contentDescription = "System Settings")
     }
